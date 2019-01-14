@@ -168,7 +168,7 @@ You can find instructions how to start a MySQL container and have it monitored b
 
 Since Docker allows us to disconnect a container from a network by just running one command, we can disconnect now orchestrator1 (possibly the leader) from the groupnet network by running:
 ```
-docker network disconnect orchnet orchestrator1
+$ docker network disconnect orchnet orchestrator1
 ```
 Check the container's logs (or the web interfaces) now. A new leader must be selected and cluster is still up and running.
 
@@ -182,7 +182,7 @@ Check the container's logs (or the web interfaces) now. A new leader must be sel
 
 First, start its backend MySQL server:
 ```
-S docker run -d --name=mysqlorchdb --net orchnet --ip "172.20.0.18" \
+$ docker run -d --name=mysqlorchdb --net orchnet --ip "172.20.0.18" \
   -v $PWD/dbOrch:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=mypass \
   mysql/mysql-server:5.7 \
   --server-id=100 \
@@ -194,7 +194,7 @@ S docker run -d --name=mysqlorchdb --net orchnet --ip "172.20.0.18" \
 
 Then setup the MySQL:
 ```
-S docker exec -it mysqlorchdb mysql -uroot -pmypass \
+$ docker exec -it mysqlorchdb mysql -uroot -pmypass \
  -e "CREATE DATABASE IF NOT EXISTS orchestrator;" \
  -e "CREATE USER 'orc_server_user' IDENTIFIED BY 'orc_server_password';" \
  -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'orc_server_user';"
