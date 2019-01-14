@@ -82,23 +82,13 @@ $ docker images
 
 The orchestrators will be started using the following configurations:
 
-1. Orchestrator1:
-- IP: 172.20.0.14
-- PORT: 3001
-- MYSQL_HOST: 172.20.0.11
-- MYSQL_PORT=3306
+|  ENV \ CONT   | Orchestrator1 | Orchestrator2 | Orchestrator3 |
+| ------------- | ------------- | ------------- | ------------- |
+| IP            | 172.20.0.14   | 172.20.0.15   | 172.20.0.16   |
+| PORT          | 3001          | 3002          | 3003          |
+| MYSQL_HOST    | 172.20.0.11   | 172.20.0.12   | 172.20.0.13   |
+| MYSQL_PORT    | 3306          | 3306          | 3306          |
 
-2. Orchestrator2:
-- IP: 172.20.0.15
-- PORT: 3002
-- MYSQL_HOST: 172.20.0.12
-- MYSQL_PORT=3306
-
-3. Orchestrator1:
-- IP: 172.20.0.16
-- PORT: 3003
-- MYSQL_HOST: 172.20.0.13
-- MYSQL_PORT=3306
 
 Run the commands below to launch the containers:
 ```
