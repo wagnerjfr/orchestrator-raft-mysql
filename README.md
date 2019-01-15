@@ -9,19 +9,19 @@ Each orchestrator will be using its own MySQL database in this setup.
 ### Reference
 https://github.com/github/orchestrator/blob/master/docs/raft.md
 
-### Clone the project and cd into the folder
+### 1. Clone the project and cd into the folder
 ```
 $ git clone https://github.com/wagnerjfr/orchestrator-raft-mysql.git
 
 $ cd orchestrator-raft-mysql
 ```
 
-### Create a Docker network
+### 2. Create a Docker network
 ```
 $ docker network create orchnet
 ```
 
-### Start 3 MySQL containers
+### 3. Start 3 MySQL containers
 Run the commnd below to start the containers:
 ```
 for N in 1 2 3
@@ -49,7 +49,7 @@ d00961c2eefe   mysql/mysql-server:5.7   "/entrypoint.sh --se…"   33 seconds ag
 d6fc8f776f26   mysql/mysql-server:5.7   "/entrypoint.sh --se…"   36 seconds ago      Up 34 seconds (healthy)   3306/tcp, 33060/tcp   mysqlorchdb1
 ```
 
-### Setup backend MySQL Servers
+### 4. Setup backend MySQL Servers
 
 It's time to setup the backend servers.
 
@@ -63,7 +63,7 @@ do docker exec -it mysqlorchdb$N mysql -uroot -pmypass \
 done
 ```
 
-### Building the Image
+### 5. Building the Image
 Let's build the orchestrator-raft-mysql Docker image:
 ```
 $ docker build -t orchestrator-raft-mysql:latest .
@@ -78,7 +78,7 @@ It's also possible to see the new image, executing:
 $ docker images
 ```
 
-### Running the containers
+### 6. Running the containers
 
 The orchestrators will be started using the following configurations:
 
@@ -101,9 +101,9 @@ do docker run -d --name orchestrator$N --net orchnet -p "300$N":3000 \
 done
 ```
 
-### Checking the raft status
+### 7. Checking the raft status
 
-#### Docker logs
+#### 7.1. Docker logs
 ```
 $ docker logs orchestrator1
 ```
@@ -141,20 +141,20 @@ Follower logs (sample):
 2019-01-13 22:18:00 DEBUG raft leader is 172.20.0.14:10008; state: Follower
 ```
 
-#### Web interface (HTTP GET access)
+#### 7.2. Web interface (HTTP GET access)
 http://localhost:3001
 
 http://localhost:3002
 
 http://localhost:3003
 
-![alt text](https://github.com/wagnerjfr/orchestrator-raft-mysql/blob/master/figure1.png)
+![alt text](https://github.com/wagnerjfr/orchestrator-raft-mysql/blob/master/figures/figure1.png)
 
-### Creating a new MySQL container to be monitored by the cluster
+### 8. Creating a new MySQL container to be monitored by the cluster
 
 You can find instructions how to start a MySQL container and have it monitored by the cluster in the project [Orchestrator Raft (SQLite) with containers](https://github.com/wagnerjfr/orchestrator-raft-sqlite).
 
-### Fault tolerance scenario
+### 9. Fault tolerance scenario
 
 Since Docker allows us to disconnect a container from a network by just running one command, we can disconnect now orchestrator1 (possibly the leader) from the groupnet network by running:
 ```
@@ -162,7 +162,7 @@ $ docker network disconnect orchnet orchestrator1
 ```
 Check the container's logs (or the web interfaces) now. A new leader must be selected and cluster is still up and running.
 
-### [Optional] Running one orchestrator container without raft
+### 10. [Optional] Running one orchestrator container without raft
 
 First, start its backend MySQL server:
 ```
@@ -191,19 +191,19 @@ $ docker run -d --name orchestrator --net orchnet -p 3005:3000 \
   -e PORT=3000 -e RAFT=false \
   orchestrator-raft-mysql:latest
 ```
-
-### Stopping the containers
+### 11. Cleanup
+#### Stopping the containers
 In another terminal run the command:
 ```
 $ docker stop mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
 ```
 
-### Removing stopped the containers
+#### Removing stopped the containers
 ```
 $ docker rm mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
 ```
 
-### Removing MySQL data directories
+#### Removing MySQL data directories
 ```
 $ sudo rm -rf dbOrch1 dbOrch2 dbOrch3
 ```
