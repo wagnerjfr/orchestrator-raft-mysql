@@ -25,7 +25,7 @@ $ docker network create orchnet
 Run the commnd below to start the containers:
 ```
 for N in 1 2 3
-do docker run -d --name=mysqlorchdb$N --net orchnet --ip "172.20.0.1$N" \
+do docker run -d --name=mysqlorchdb$N --net orchnet \
   -v $PWD/dbOrch$N:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=mypass \
   mysql/mysql-server:5.7 \
   --server-id=100 \
@@ -84,31 +84,21 @@ The orchestrators will be started using the following configurations:
 
 |  ENV \ CONT   | Orchestrator1 | Orchestrator2 | Orchestrator3 |
 | ------------- | ------------- | ------------- | ------------- |
-| IP            | 172.20.0.14   | 172.20.0.15   | 172.20.0.16   |
+| Docker HOST   | orchestrator1 | orchestrator2 | orchestrator3 |
 | PORT          | 3001          | 3002          | 3003          |
-| MYSQL_HOST    | 172.20.0.11   | 172.20.0.12   | 172.20.0.13   |
+| MYSQL_HOST    | mysqlorchdb1  | mysqlorchdb2  | mysqlorchdb3  |
 | MYSQL_PORT    | 3306          | 3306          | 3306          |
 
 
-Run the commands below to launch the containers:
+Run the command below to launch the containers:
 ```
-docker run -d --name orchestrator1 --net orchnet --ip "172.20.0.14" -p "3001":3000 \
-  -e MYSQL_HOST="172.20.0.11" -e MYSQL_PORT=3306 \
-  -e PORT=3000 -e BIND="172.20.0.14" \
-  -e NODE1=172.20.0.14 -e NODE2=172.20.0.15 -e NODE3=172.20.0.16 \
+for N in 1 2 3
+do docker run -d --name orchestrator$N --net orchnet -p "300$N":3000 \
+  -e MYSQL_HOST=mysqlorchdb$N -e MYSQL_PORT=3306 \
+  -e BIND=orchestrator$N -e PORT=3000 \
+  -e NODE1=orchestrator1 -e NODE2=orchestrator2 -e NODE3=orchestrator3 \
   orchestrator-raft-mysql:latest
-
-docker run -d --name orchestrator2 --net orchnet --ip "172.20.0.15" -p "3002":3000 \
-  -e MYSQL_HOST="172.20.0.12" -e MYSQL_PORT=3306 \
-  -e PORT=3000 -e BIND="172.20.0.15" \
-  -e NODE1=172.20.0.14 -e NODE2=172.20.0.15 -e NODE3=172.20.0.16 \
-  orchestrator-raft-mysql:latest
-
-docker run -d --name orchestrator3 --net orchnet --ip "172.20.0.16" -p "3003":3000 \
-  -e MYSQL_HOST="172.20.0.13" -e MYSQL_PORT=3306 \
-  -e PORT=3000 -e BIND="172.20.0.16" \
-  -e NODE1=172.20.0.14 -e NODE2=172.20.0.15 -e NODE3=172.20.0.16 \
-  orchestrator-raft-mysql:latest
+done
 ```
 
 ### Checking the raft status
@@ -174,15 +164,9 @@ Check the container's logs (or the web interfaces) now. A new leader must be sel
 
 ### [Optional] Running one orchestrator container without raft
 
-1. Orchestrator:
-- IP: 172.20.0.19
-- PORT: 3005
-- MYSQL_HOST: 172.20.0.18
-- MYSQL_PORT=3306
-
 First, start its backend MySQL server:
 ```
-$ docker run -d --name=mysqlorchdb --net orchnet --ip "172.20.0.18" \
+$ docker run -d --name=mysqlorchdb --net orchnet \
   -v $PWD/dbOrch:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=mypass \
   mysql/mysql-server:5.7 \
   --server-id=100 \
@@ -202,8 +186,8 @@ $ docker exec -it mysqlorchdb mysql -uroot -pmypass \
 
 Finally start the orchestrator container:
 ```
-$ docker run -d --name orchestrator --net orchnet --ip "172.20.0.19" -p 3005:3000 \
-  -e MYSQL_HOST="172.20.0.18" -e MYSQL_PORT=3306 \
+$ docker run -d --name orchestrator --net orchnet -p 3005:3000 \
+  -e MYSQL_HOST=mysqlorchdb -e MYSQL_PORT=3306 \
   -e PORT=3000 -e RAFT=false \
   orchestrator-raft-mysql:latest
 ```
