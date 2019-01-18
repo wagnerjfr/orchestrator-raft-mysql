@@ -56,7 +56,7 @@ It's time to setup the backend servers.
 Run this command to create an orchestrator database, an orchestrator user and grant the privileges to it:
 ```
 for N in 1 2 3
-do docker exec -it mysqlorchdb$N mysql -uroot -pmypass \
+do docker exec -t mysqlorchdb$N mysql -uroot -pmypass \
  -e "CREATE DATABASE IF NOT EXISTS orchestrator;" \
  -e "CREATE USER 'orc_server_user' IDENTIFIED BY 'orc_server_password';" \
  -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'orc_server_user';"
@@ -178,7 +178,7 @@ $ docker run -d --name=mysqlorchdb --net orchnet \
 
 Then setup the MySQL:
 ```
-$ docker exec -it mysqlorchdb mysql -uroot -pmypass \
+$ docker exec -t mysqlorchdb mysql -uroot -pmypass \
  -e "CREATE DATABASE IF NOT EXISTS orchestrator;" \
  -e "CREATE USER 'orc_server_user' IDENTIFIED BY 'orc_server_password';" \
  -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'orc_server_user';"
