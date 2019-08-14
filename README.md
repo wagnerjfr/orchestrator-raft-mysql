@@ -156,7 +156,7 @@ You can find instructions how to start a MySQL container and have it monitored b
 
 ### 9. Fault tolerance scenario
 
-Since Docker allows us to disconnect a container from a network by just running one command, we can disconnect now orchestrator1 (possibly the leader) from the groupnet network by running:
+Since Docker allows us to disconnect a container from a network by just running one command. We are going to disconnect **orchestrator1** *(possibly the leader)* from the groupnet network by running:
 ```
 $ docker network disconnect orchnet orchestrator1
 ```
