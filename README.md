@@ -1,8 +1,6 @@
 # Orchestrator/Raft (with MySQL backend) using Docker containers.
 
-Set up a orchestrator/raft cluster for high availability.
-
-You will run orchestrator/raft on a 3 node setup using Docker containers.
+Set up a orchestrator/raft cluster for high availability using a 3 nodes topology setup with Docker containers.
 
 Each orchestrator will be using its own MySQL database in this setup.
 
