@@ -88,7 +88,7 @@ The orchestrators will be started using the following configurations:
 | MYSQL_PORT    | 3306          | 3306          | 3306          |
 
 
-Run the command below to launch the containers:
+Run the command below to launch the three containers:
 ```
 for N in 1 2 3
 do docker run -d --name orchestrator$N --net orchnet -p "300$N":3000 \
