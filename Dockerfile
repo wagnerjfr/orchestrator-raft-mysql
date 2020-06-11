@@ -3,7 +3,7 @@ FROM oraclelinux:7-slim
 ENV PORT=3000
 ENV RAFT=true
 ENV GOPATH=/tmp/go
-ENV GOFILE=go1.10.1.linux-amd64.tar.gz
+ENV GOFILE=go1.14.4.linux-amd64.tar.gz
 ENV ORCHPATH=/usr/local
 
 RUN yum update -y
