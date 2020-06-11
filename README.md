@@ -15,7 +15,7 @@ $ git clone https://github.com/wagnerjfr/orchestrator-raft-mysql.git
 
 $ cd orchestrator-raft-mysql
 
-$ docker build -t orchestrator-raft-mysql:latest .
+$ docker build -t wagnerfranchin/orchestrator-raft-mysql:latest .
 
 $ docker images
 ```
@@ -86,7 +86,7 @@ do docker run -d --name orchestrator$N --net orchnet -p "300$N":3000 \
   -e MYSQL_HOST=mysqlorchdb$N -e MYSQL_PORT=3306 \
   -e BIND=orchestrator$N -e PORT=3000 \
   -e NODE1=orchestrator1 -e NODE2=orchestrator2 -e NODE3=orchestrator3 \
-  orchestrator-raft-mysql:latest
+  wagnerfranchin/orchestrator-raft-mysql:latest
 done
 ```
 
@@ -178,18 +178,13 @@ Finally start the orchestrator container:
 $ docker run -d --name orchestrator --net orchnet -p 3005:3000 \
   -e MYSQL_HOST=mysqlorchdb -e MYSQL_PORT=3306 \
   -e PORT=3000 -e RAFT=false \
-  orchestrator-raft-mysql:latest
+  wagnerfranchin/orchestrator-raft-mysql:latest
 ```
 ### 10. Cleanup
-#### Stopping the containers
-In another terminal run the command:
-```
-$ docker stop mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
-```
 
-#### Removing stopped the containers
+#### Stopping and Removing the containers
 ```
-$ docker rm mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
+$ docker rm -f mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
 ```
 
 #### Removing MySQL data directories
@@ -199,4 +194,4 @@ $ sudo rm -rf dbOrch1 dbOrch2 dbOrch3
 
 #### Removing Docker image
 ```
-$ docker rmi orchestrator-raft-mysql:latest
+$ docker rmi wagnerfranchin/orchestrator-raft-mysql:latest
