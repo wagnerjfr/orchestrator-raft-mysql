@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wagnerjfr/orchestrator-raft-mysql.svg?branch=master)](https://travis-ci.org/wagnerjfr/orchestrator-raft-mysql)
+
 # Orchestrator/Raft (with MySQL backend) using Docker containers.
 
 Set up a orchestrator/raft cluster for high availability using a 3 nodes topology setup with Docker containers.
