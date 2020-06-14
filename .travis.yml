@@ -1,0 +1,26 @@
+language: bash
+services:
+  - docker
+before_script:
+  - docker build -t $DOCKER_USERNAME/orchestrator-raft-mysql:$TAG .
+  - docker network create orchnet
+script:
+  - docker images
+  - bash ./travis-ci/create_mysqls.sh
+  - docker ps -a
+  - sleep 90
+  - docker ps -a
+  - bash ./travis-ci/set_mysqls.sh
+  - sleep 10
+  - bash ./travis-ci/create_orch_cluster.sh
+  - docker ps -a
+  - docker logs orchestrator1
+  - sleep 60
+  - bash ./travis-ci/validate.sh
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push $DOCKER_USERNAME/orchestrator-raft-mysql:$TAG
+after_script:
+  - docker rm -f orchestrator1 orchestrator2 orchestrator3
+  - docker network rm orchnet
+  - sudo rm -rf dbOrch1 dbOrch2 dbOrch3
