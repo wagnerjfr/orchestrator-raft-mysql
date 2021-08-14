@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wagnerjfr/orchestrator-raft-mysql.svg?branch=master)](https://travis-ci.org/wagnerjfr/orchestrator-raft-mysql)
+[![Build Status](https://travis-ci.com/wagnerjfr/orchestrator-raft-mysql.svg?branch=master)](https://travis-ci.com/wagnerjfr/orchestrator-raft-mysql)
 
 # Orchestrator/Raft (with MySQL backend) using Docker containers.
 
@@ -13,18 +13,21 @@ https://github.com/github/orchestrator/blob/master/docs/raft.md
 
 Clone the project and build it locally
 ```
-$ git clone https://github.com/wagnerjfr/orchestrator-raft-mysql.git
-
-$ cd orchestrator-raft-mysql
-
-$ docker build -t wagnerfranchin/orchestrator-raft-mysql:latest .
-
-$ docker images
+git clone https://github.com/wagnerjfr/orchestrator-raft-mysql.git
+```
+```
+cd orchestrator-raft-mysql
+```
+```
+docker build -t wagnerfranchin/orchestrator-raft-mysql:latest .
+```
+```
+docker images
 ```
 
 ### 2. Create a Docker network
 ```
-$ docker network create orchnet
+docker network create orchnet
 ```
 
 ### 3. Start 3 MySQL containers
@@ -96,13 +99,13 @@ done
 
 #### 6.1. Docker logs
 ```
-$ docker logs orchestrator1
+docker logs orchestrator1
 ```
 ```
-$ docker logs orchestrator2
+docker logs orchestrator2
 ```
 ```
-$ docker logs orchestrator3
+docker logs orchestrator3
 ```
 
 Leader logs (sample):
@@ -157,7 +160,7 @@ Check the container's logs (or the web interfaces) now. A new leader must be sel
 
 First, start its backend MySQL server:
 ```
-$ docker run -d --name=mysqlorchdb --net orchnet \
+docker run -d --name=mysqlorchdb --net orchnet \
   -v $PWD/dbOrch:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=mypass \
   mysql/mysql-server:5.7 \
   --server-id=100 \
@@ -169,7 +172,7 @@ $ docker run -d --name=mysqlorchdb --net orchnet \
 
 Then setup the MySQL:
 ```
-$ docker exec -t mysqlorchdb mysql -uroot -pmypass \
+docker exec -t mysqlorchdb mysql -uroot -pmypass \
  -e "CREATE DATABASE IF NOT EXISTS orchestrator;" \
  -e "CREATE USER 'orc_server_user' IDENTIFIED BY 'orc_server_password';" \
  -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'orc_server_user';"
@@ -177,7 +180,7 @@ $ docker exec -t mysqlorchdb mysql -uroot -pmypass \
 
 Finally start the orchestrator container:
 ```
-$ docker run -d --name orchestrator --net orchnet -p 3005:3000 \
+docker run -d --name orchestrator --net orchnet -p 3005:3000 \
   -e MYSQL_HOST=mysqlorchdb -e MYSQL_PORT=3306 \
   -e PORT=3000 -e RAFT=false \
   wagnerfranchin/orchestrator-raft-mysql:latest
@@ -186,14 +189,14 @@ $ docker run -d --name orchestrator --net orchnet -p 3005:3000 \
 
 #### Stopping and Removing the containers
 ```
-$ docker rm -f mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
+docker rm -f mysqlorchdb1 mysqlorchdb2 mysqlorchdb3 orchestrator1 orchestrator2 orchestrator3
 ```
 
 #### Removing MySQL data directories
 ```
-$ sudo rm -rf dbOrch1 dbOrch2 dbOrch3
+sudo rm -rf dbOrch1 dbOrch2 dbOrch3
 ```
 
 #### Removing Docker image
 ```
-$ docker rmi wagnerfranchin/orchestrator-raft-mysql:latest
+docker rmi wagnerfranchin/orchestrator-raft-mysql:latest
