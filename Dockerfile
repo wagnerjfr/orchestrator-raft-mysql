@@ -4,7 +4,7 @@ ENV GOPATH=/tmp/go
 ENV GOFILE=go1.14.4.linux-amd64.tar.gz
 ENV ORCHPATH=/usr/local
 
-RUN yum update -y
+RUN yum update -y && yum clean all
 
 RUN yum install -y \
   libcurl \
@@ -16,14 +16,12 @@ RUN yum install -y \
   wget \
   which \
   perl-Digest-SHA \
+  oracle-golang-release-el7 \
   && yum clean all
 
-RUN wget https://dl.google.com/go/$GOFILE && \
- tar -xvf $GOFILE && \
- mv go $GOPATH && \
- rm $GOFILE
-
-ENV PATH=$GOPATH"/bin:${PATH}"
+RUN yum install -y \
+  golang \
+  && yum clean all
 
 RUN mkdir -p $ORCHPATH
 WORKDIR $ORCHPATH
